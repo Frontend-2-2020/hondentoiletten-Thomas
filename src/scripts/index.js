@@ -23,22 +23,21 @@ var myIcon = L.icon({
     popupAnchor: [-3, -76],
 });
 
-// Add marker
-L.marker([51.054633,3.7219431], {icon: myIcon}).addTo(map);
-
 // Import axios
 import axios from 'axios';
  
 // Make an axios request from Gent Hondenvoorzieningen json
 axios.get('https://datatank.stad.gent/4/infrastructuur/hondenvoorzieningen.geojson')
   .then(function (response) {
-    // handle success
+
+    // Make data variable match array of coordinates
     var data = response.data.coordinates;
     console.log(data);
 
+    // For loop to generate all locations in the dataset
     for (let i = 0; i < data.length; i++) {
         const location = data[i];
-        // Add marker
+        // Add markers
         L.marker([location[1],location[0]], {icon: myIcon}).addTo(map);
         
     }
