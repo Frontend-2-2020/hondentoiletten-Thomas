@@ -47,6 +47,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.6.0",
-    "core-js": "^3.2.1"
+    "core-js": "^3.2.1",
+    "google-maps": "^3.3.0",
+    "leaflet": "^1.5.1"
   }
 }
