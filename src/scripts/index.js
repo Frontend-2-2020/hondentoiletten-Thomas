@@ -18,8 +18,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 // Make new icon
 var myIcon = L.icon({
     iconUrl: 'public/marker.png',
-    iconSize: [25, 35], // grootte van icon
-    iconAnchor: [16, 37],
+    iconSize: [26, 35], // grootte van icon
+    iconAnchor: [13, 35],
     popupAnchor: [-3, -76],
 });
 
