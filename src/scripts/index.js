@@ -8,8 +8,8 @@ import "leaflet/dist/leaflet.css";
 
 // initialize the map on the "map" div with a given center and zoom
 var map = L.map('map', {
-    center: [51.054633,3.7219431],
-    zoom: 18
+    center: [51.0634127,3.7243032],
+    zoom: 16
 });
 
 // Add layer tiles
