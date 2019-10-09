@@ -32,7 +32,8 @@ axios.get('https://datatank.stad.gent/4/infrastructuur/hondenvoorzieningen.geojs
 
     // Make data variable match array of coordinates
     var data = response.data.coordinates;
-    console.log(data);
+    // tweede optie
+    // var {coordinates} = response.data;
 
     // For loop to generate all locations in the dataset
     for (let i = 0; i < data.length; i++) {
