@@ -14,11 +14,38 @@ body {
 .mapListDiv {
   height: 500px;
   display: inline;
-  min-width: 15%;
+  min-width: 25%;
 }
 
 article {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
+
+#mapList {
+  list-style: none;
+  padding-left: 0px;
+  margin: 0px;
+  width: 100%;
+
+}
+
+
+.toilet {
+  background: white;
+  color: black;
+  width: 100%;
+  padding: 10px;
+  height: 20%;
+}
+
+.toilet:hover {
+  background: $body-color;
+  color: white;
+}
+
+h4 {
+  margin: 0;
+}
+

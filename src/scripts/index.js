@@ -21,14 +21,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 // Make new icon
 var myIcon = L.icon({
-    iconUrl: 'public/marker.png',
+    iconUrl: 'public/dog_red.png',
     iconSize: [26, 35], // grootte van icon
     iconAnchor: [13, 35],
     popupAnchor: [-3, -76],
 });
 
 var closestToiletIcon = L.icon({
-  iconUrl: 'public/dog.png',
+  iconUrl: 'public/dog_green.png',
   iconSize: [26, 35], // grootte van icon
   iconAnchor: [13, 35],
   popupAnchor: [-3, -76],
@@ -59,19 +59,14 @@ axios.get('https://datatank.stad.gent/4/infrastructuur/hondenvoorzieningen.geojs
     // Toiletten sorteren volgens distance
     toiletten.sort(toiletSorter);
 
-    
     // For loop to generate all locations in the dataset
     renderClosestToilets(toiletten);
     
     // Render rest of toilets
-    // renderOtherMarkers(toiletten);
+    renderOtherMarkers(toiletten);
 
-    // const mapList = document.querySelector("#mapList");
-    // mapList.forEach(element => {
-    //     const mapList_item = document.createElement("li");
-    //     mapList_item.innerHTML = "<h3>" + element[4] + "</h3>";
-    //     mapList.appendChild(mapList_item);
-    // });
+    // Render mapList
+    renderMapList(toiletten);
 
 
   });
@@ -87,7 +82,7 @@ function calcDistance(toiletten) {
         { latitude: element[1], longitude: element[0]}
       );
 
-      element.push(distance);
+      element.push(distance/1000);
     });
   };
   console.log(toiletten);
@@ -115,28 +110,56 @@ function toiletSorter(a,b){
   return 0;
 };
 
+let location;
+let mapList = document.querySelector("#mapList");
+
 // Render closest 5 toilets
 function renderClosestToilets(toiletten){
   for (let i = 0; i < 5; i++) {
-    const location = toiletten[i];
+    location = toiletten[i];
   
     // Add name to closest toilets
-    toiletten[i].push("Plek " + (i+1));
+    toiletten[i].push(i+1);
   
     // Add markers
     L.marker([location[1],location[0]], {icon: closestToiletIcon}).addTo(map);
+
+    // Render mapList
+    let mapListItem = document.createElement("li");
+    mapListItem.innerHTML = `
+      <h4>Plek ${location[3]}</h4>
+      <small>op ${location[2]} km afstand</small>
+    `;
+    mapListItem.setAttribute("id", `toilet${location[3]}`);
+    mapListItem.setAttribute("class", "toilet");
+
+    mapListItem.addEventListener("mouseover", changeMarker);
+
+    mapList.appendChild(mapListItem);
   };
 };
 
-function renderOtherMarkers(){
+function renderOtherMarkers(toiletten){
   // Render Rest of markers
   for (let i = 0; i < toiletten.length; i++) {
-      if(toiletten[i].[3]) {
-        const location = toiletten[i];
+      var currentToilet = toiletten[i];
+      if(!currentToilet[3]) {
         // Add markers
-        L.marker([location[1],location[0]], {icon: myIcon}).addTo(map);
+        L.marker([currentToilet[1],currentToilet[0]], {icon: myIcon}).addTo(map);
+
       }
       
   }; 
 }
 
+function renderMapList(toiletten){
+  
+  for (let i = 0; i < toiletten[5]; i++) {
+    
+  };
+}
+
+
+function changeMarker(e) {
+    console.log(e.currentTarget);
+}
