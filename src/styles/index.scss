@@ -7,13 +7,18 @@ body {
 
 #map {
   height: 500px;
+  display: inline;
+  min-width: 75%;
 }
 
 .mapListDiv {
   height: 500px;
+  display: inline;
+  min-width: 15%;
 }
 
 article {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
 }

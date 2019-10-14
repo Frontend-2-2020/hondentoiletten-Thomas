@@ -37,6 +37,14 @@ var closestToiletIcon = L.icon({
 // Import axios
 import axios from 'axios';
  
+// Ask for geolocation
+let userLat = 0;
+let userLong = 0;
+
+// Positie ophalen vna user
+// navigator.geolocation.getCurrentPosition(setPosition);  
+navigator.geolocation.getCurrentPosition(setPosition);  
+
 // Make an axios request from Gent Hondenvoorzieningen json
 axios.get('https://datatank.stad.gent/4/infrastructuur/hondenvoorzieningen.geojson')
   .then(function (response) {
@@ -46,60 +54,49 @@ axios.get('https://datatank.stad.gent/4/infrastructuur/hondenvoorzieningen.geojs
     // tweede optie
     // var {coordinates} = response.data;
     
-    // Positie ophalen vna user
-    // navigator.geolocation.getCurrentPosition(setPosition);  
-    navigator.geolocation.watchPosition(setPosition);   
-    
-    // Nieuw array maken van toiletten + distance
-    console.log(toiletten);
-    toiletten.forEach(element => {
-      element.push(getDistance(
-        { latitude: userLat, longitude: userLong },
-        { latitude: element[1], longitude: element[0]}
-      ));
-    });
-    console.log(toiletten);
+    calcDistance(toiletten);
 
     // Toiletten sorteren volgens distance
     toiletten.sort(toiletSorter);
 
-    // For loop to generate all locations in the dataset
     
-    // Closest 5 only
-    for (let i = 0; i < 5; i++) {
-      const location = toiletten[i];
+    // For loop to generate all locations in the dataset
+    renderClosestToilets(toiletten);
+    
+    // Render rest of toilets
+    // renderOtherMarkers(toiletten);
 
-      // Add name to closest toilets
-      toiletten[i].push("Plek " + (i+1));
-
-      // Add markers
-      L.marker([location[1],location[0]], {icon: closestToiletIcon}).addTo(map);
-    }
-    // Rest of markers
-    for (let i = 5; i < toiletten.length; i++) {
-        const location = toiletten[i];
-        // Add markers
-        L.marker([location[1],location[0]], {icon: myIcon}).addTo(map);
-    } 
-
-    const mapList = document.querySelector(".mapList");
-    mapList.forEach(element => {
-        const mapList_item = document.createElement("li");
-        mapList_item.innerHTML = "<h3>" + element[4] + "</h3>";
-        mapList.appendChild(mapList_item);
-    });
+    // const mapList = document.querySelector("#mapList");
+    // mapList.forEach(element => {
+    //     const mapList_item = document.createElement("li");
+    //     mapList_item.innerHTML = "<h3>" + element[4] + "</h3>";
+    //     mapList.appendChild(mapList_item);
+    // });
 
 
   });
 
-// Ask for geolocation
-var userLat = 0;
-var userLong = 0;
+var distance;
+function calcDistance(toiletten) {
+  // Nieuw array maken van toiletten + distance
+  if (toiletten && userLat) {
+    
+    toiletten.forEach(element => {
+      distance = getDistance(
+        { latitude: userLat, longitude: userLong },
+        { latitude: element[1], longitude: element[0]}
+      );
+
+      element.push(distance);
+    });
+  };
+  console.log(toiletten);
+}
 
 // Functie om positie te plaatsen op kaart
 function setPosition(pos){
-  var userLat = pos.coords.latitude;
-  var userLong = pos.coords.longitude;
+  userLat = pos.coords.latitude;
+  userLong = pos.coords.longitude;
   
   // Second option:
   // const {userLat, userLong} = pos.coords;
@@ -113,8 +110,33 @@ function setPosition(pos){
 
 // Toiletten sorteren
 function toiletSorter(a,b){
-  if(a[3] > b[3]) { return -1; };
-  if(a[3] < b[3]) { return 1; };
+  if(a[2] > b[2]) { return 1; };
+  if(a[2] < b[2]) { return -1; };
   return 0;
+};
+
+// Render closest 5 toilets
+function renderClosestToilets(toiletten){
+  for (let i = 0; i < 5; i++) {
+    const location = toiletten[i];
+  
+    // Add name to closest toilets
+    toiletten[i].push("Plek " + (i+1));
+  
+    // Add markers
+    L.marker([location[1],location[0]], {icon: closestToiletIcon}).addTo(map);
+  };
+};
+
+function renderOtherMarkers(){
+  // Render Rest of markers
+  for (let i = 0; i < toiletten.length; i++) {
+      if(toiletten[i].[3]) {
+        const location = toiletten[i];
+        // Add markers
+        L.marker([location[1],location[0]], {icon: myIcon}).addTo(map);
+      }
+      
+  }; 
 }
 
